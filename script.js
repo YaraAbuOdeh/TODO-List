@@ -8,7 +8,6 @@ let todoslist;
 
 
  function retrieveTodosListFromLocalStorage(){
-   console.log("hello")
    let objStr = localStorage.getItem('tasks');
     return JSON.parse(objStr);
     
@@ -17,17 +16,15 @@ let todoslist;
 
 
 
-// Load tasks from API only if local storage is empty
-if (!localStorage.getItem("tasks"))  {
-    fetchTodoList();
-    console.log("hello");
-} else {
-    // If local storage is not empty, display tasks from local storage
-    todoslist=retrieveTodosListFromLocalStorage();
-    console.log(todoslist);
-    //DisplayInfo();
+const hasLocalTodos = localStorage.getItem('tasks') !== null;
 
-    console.log("ha")
+// Load tasks from API only if local storage is empty
+if (hasLocalTodos)  {
+    console.log('Loading tasks from local storage')
+    todoslist = retrieveTodosListFromLocalStorage();
+    DisplayInfo();
+} else {
+    todoslist = fetchTodoList();
 }
 
 // Function to fetch tasks from the API
@@ -66,7 +63,7 @@ addTaskBtn.onclick = () => {
         edit_id = null;
         SaveInfo(); // Call SaveInfo after editing
     } else {
-        todoslist.push({
+        todoslist.unshift({
             'task': task,
             'status': 'pending' // New task's status is pending
         });
